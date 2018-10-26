@@ -1,34 +1,20 @@
 var WebSocket = require('ws'),
-    Payment = require('./payment');
+    Payment = require('./lib/payment');
 var websocketUrl = 'wss://s1.ripple.com';
-var rippleAddress = process.env.RIPPLE_ADDRESS;
+var rippleAddress = 'rEb8TK3gBgk5auZkwc6sHnwrGVJH8DuaLh';
 var request = require('request');
-var Coinbase = require('../coinbase-node/lib/coinbase');
-
-var coinbaseClient = new Coinbase.Client({
-  api_key: process.env.COINBASE_API_KEY
-});
 
 function handlePayment(payment) {
-  if (payment.toIssuer == rippleAddress) {
+  if (payment.toAddress == rippleAddress) {
     console.log('issued by this account');
-    if (payment.toCurrency == 'BTC') {
-      console.log('is BTC');
+    //if (payment.toCurrency == 'XRP') {
       if (payment.destinationTag) {
         var tag = payment.destinationTag;
         console.log("look up the bridge for destination tag", tag);
-        
-        var url = 'https://www.sendthembitcoins.com/api/ripple_bridges/'+tag;
-        request.get(url, function(err, resp, body) {
-          if (!error && response.statusCode == 200) {
-            var bitcoin_address = body.bitcoin_address;
-            coinbaseClient.send_money(bitcoin_address, payment.toAmount);
-          }
-        })
       }
-    }
+    //}
   } else {
-    console.log('issued by some other account', payment.toIssuer);
+    //console.log('issued by some other account', payment.toAddress);
   }
 }
 
